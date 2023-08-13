@@ -1,0 +1,16 @@
+{
+    "Camera": {
+        "look_from": [0.0, 0.0, 0.0],
+        "look_to": [0.0, 0.0, -1.0],
+        "ref_up": [0.0, 1.0, 0.0],
+        "y_field_of_view": 90.0,
+        "focal_length": 1.0,
+        "aspect_ratio": 1.7777777777777777,
+        "defocus_angle": 0.0
+    },
+    "Scene": {
+        "Materials": {},
+        "Geometries": {}
+    },
+    "Enable gamma correction": false
+}
