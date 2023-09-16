@@ -3,6 +3,8 @@
 
 #include <material/base-material.hpp>
 #include <material/dielectric.hpp>
+#include <material/diffuse-light.hpp>
+#include <material/isotropic.hpp>
 #include <material/lambertian.hpp>
 #include <material/metal.hpp>
 

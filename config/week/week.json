@@ -1,0 +1,122 @@
+{
+    "Camera": {
+        "look_from": [478.0, 278.0, -600.0],
+        "look_to": [278.0, 278.0, 0.0],
+        "ref_up": [0.0, 1.0, 0.0],
+        "y_field_of_view": 40.0,
+        "focal_length": 10.0,
+        "aspect_ratio": 1.0,
+        "defocus_angle": 0.0
+    },
+    "Scene": {
+        "Materials": {
+            "light": {
+                "type": "DiffuseLight",
+                "emit": [7.0, 7.0, 7.0]
+            },
+            "moving sphere": {
+                "type": "Lambertian",
+                "albedo": [0.7, 0.3, 0.1]
+            },
+            "dielectric": {
+                "type": "Dielectric",
+                "rior": 1.5
+            },
+            "metal": {
+                "type": "Metal",
+                "albedo": [0.8, 0.8, 0.9],
+                "fuzz": 1.0
+            },
+            "earth": {
+                "type": "Lambertian",
+                "albedo": {
+                    "type": "ImageTexture",
+                    "path": "assets/earthmap.jpg"
+                }
+            },
+            "pertext": {
+                "type": "Lambertian",
+                "albedo": {
+                    "type": "NoiseTexture",
+                    "scale": 0.1
+                }
+            }
+        },
+        "Geometries": {
+            "light": {
+                "type": "Quad",
+                "base_point": [123.0, 554.0, 147.0],
+                "edge_a": [300.0, 0.0, 0.0],
+                "edge_b": [0.0, 0.0, 265.0],
+                "material": "light"
+            },
+            "moving sphere": {
+                "type": "MovingSphere",
+                "start_center": [400.0, 400.0, 200.0],
+                "end_center": [430.0, 400.0, 200.0],
+                "radius": 50.0,
+                "material": "moving sphere"
+            },
+            "dielectric": {
+                "type": "Sphere",
+                "center": [260.0, 150.0, 45.0],
+                "radius": 50.0,
+                "material": "dielectric"
+            },
+            "metal": {
+                "type": "Sphere",
+                "center": [0.0, 150.0, 145.0],
+                "radius": 50.0,
+                "material": "metal"
+            },
+            "boundary1": {
+                "type": "Sphere",
+                "center": [360.0, 150.0, 145.0],
+                "radius": 70.0,
+                "material": "dielectric"
+            },
+            "small medium": {
+                "type": "ConstantMedium",
+                "boundary": {
+                    "type": "Sphere",
+                    "center": [360.0, 150.0, 145.0],
+                    "radius": 70.0,
+                    "material": "dielectric"
+                },
+                "phase function": [0.2, 0.4, 0.9],
+                "density": 0.2
+            },
+            "big medium": {
+                "type": "ConstantMedium",
+                "boundary": {
+                    "type": "Sphere",
+                    "center": [0.0, 0.0, 0.0],
+                    "radius": 5000.0,
+                    "material": "dielectric"
+                },
+                "phase function": [1.0, 1.0, 1.0],
+                "density": 0.0001
+            },
+            "earth": {
+                "type": "Sphere",
+                "center": [400.0, 200.0, 400.0],
+                "radius": 100.0,
+                "material": "earth"
+            },
+            "perlin sphere": {
+                "type": "Sphere",
+                "center": [220.0, 280.0, 300.0],
+                "radius": 80.0,
+                "material": "pertext"
+            },
+            "random scene": {
+                "type": "FinalScene"
+            }
+        }
+    },
+    "Enable gamma correction": true,
+    "Integrator": {
+        "enable background color": true,
+        "background color": [0.0, 0.0, 0.0]
+    }
+}

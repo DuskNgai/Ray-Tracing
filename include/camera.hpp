@@ -61,6 +61,13 @@ public:
 
     /// @brief Create a camera based on given configuration.
     static std::shared_ptr<Camera> create(nlohmann::json const& config);
+
+private:
+    /// @brief Get the offset inside the pixel.
+    std::pair<Float, Float> get_offset_uv(uint32_t i, uint32_t j, RandomNumberGenerator& rng) const;
+
+    /// @brief Get the origin-offseted ray.
+    Ray generate_ray(Float u, Float v, RandomNumberGenerator& rng) const;
 };
 
 RAY_TRACING_NAMESPACE_END

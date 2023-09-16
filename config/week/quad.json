@@ -1,0 +1,76 @@
+{
+    "Camera": {
+        "look_from": [0.0, 0.0, 9.0],
+        "look_to": [0.0, 0.0, 0.0],
+        "ref_up": [0.0, 1.0, 0.0],
+        "y_field_of_view": 80.0,
+        "focal_length": 10.0,
+        "aspect_ratio": 1.0,
+        "defocus_angle": 0.0
+    },
+    "Scene": {
+        "Materials": {
+            "red": {
+                "type": "Lambertian",
+                "albedo": [1.0, 0.2, 0.2]
+            },
+            "green": {
+                "type": "Lambertian",
+                "albedo": [0.2, 1.0, 0.2]
+            },
+            "blue": {
+                "type": "Lambertian",
+                "albedo": [0.2, 0.2, 1.0]
+            },
+            "orange": {
+                "type": "Lambertian",
+                "albedo": [1.0, 0.5, 0.0]
+            },
+            "teal": {
+                "type": "Lambertian",
+                "albedo": [0.2, 0.8, 0.8]
+            }
+        },
+        "Geometries": {
+            "left": {
+                "type": "Quad",
+                "base_point": [-3.0, -2.0, 5.0],
+                "edge_a": [0.0, 0.0, -4.0],
+                "edge_b": [0.0, 4.0, 0.0],
+                "material": "red"
+            },
+            "back": {
+                "type": "Quad",
+                "base_point": [-2.0, -2.0, 0],
+                "edge_a": [4.0, 0.0, 0.0],
+                "edge_b": [0.0, 4.0, 0.0],
+                "material": "green"
+            },
+            "right": {
+                "type": "Quad",
+                "base_point": [3.0, -2.0, 1.0],
+                "edge_a": [0.0, 0.0, 4.0],
+                "edge_b": [0.0, 4.0, 0.0],
+                "material": "blue"
+            },
+            "upper": {
+                "type": "Quad",
+                "base_point": [-2.0, 3.0, 1.0],
+                "edge_a": [4.0, 0.0, 0.0],
+                "edge_b": [0.0, 0.0, 4.0],
+                "material": "orange"
+            },
+            "lower": {
+                "type": "Quad",
+                "base_point": [-2.0, -3.0, 5.0],
+                "edge_a": [4.0, 0.0, 0.0],
+                "edge_b": [0.0, 0.0, -4.0],
+                "material": "teal"
+            }
+        }
+    },
+    "Enable gamma correction": true,
+    "Integrator": {
+        "enable background color": false
+    }
+}

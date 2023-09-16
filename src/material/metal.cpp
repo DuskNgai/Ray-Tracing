@@ -10,7 +10,7 @@ bool Metal::scatter(Ray const& ray, Interaction const& interaction, RandomNumber
     auto reflected{ glm::reflect(glm::normalize(ray.direction), interaction.normal) };
 
     *attenuation = this->albedo;
-    *scattered = { interaction.hit_point, reflected + this->fuzz * glm::normalize(random_vector3f_in_unit_sphere(rng)) };
+    *scattered = { interaction.hit_point, reflected + this->fuzz * glm::normalize(random_vector3f_in_unit_sphere(rng)), ray.time_point };
     return glm::dot(scattered->direction, interaction.normal) > 0;
 }
 

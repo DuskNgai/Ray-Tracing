@@ -3,7 +3,6 @@
 #include <string>
 
 #include <fmt/core.h>
-#include <nlohmann/json.hpp>
 
 #include <geometry/geometry.hpp>
 #include <integrator.hpp>
@@ -33,7 +32,7 @@ int main(int argc, char** argv) {
     // Render the image.
     Timer timer;
     timer.start();
-    Integrator integrator{ args.spp, args.ray_tracing_depth };
+    Integrator integrator{ args.spp, args.ray_tracing_depth, config.at("Integrator") };
     integrator.render(scene, camera);
     fmt::print("\nRendering Done!\n");
     timer.stop();

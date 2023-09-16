@@ -42,20 +42,8 @@ void Camera::set_pixel(uint32_t i, uint32_t j, Color3f const& color) const {
 }
 
 Ray Camera::generate_ray(uint32_t i, uint32_t j, RandomNumberGenerator& rng) const {
-    // Shoot ray to the center of the pixel.
-    Float u{ (2.0_f * (static_cast<Float>(i) + rng()) / static_cast<Float>(this->film->width)) - 1.0_f };
-    Float v{ (2.0_f * (static_cast<Float>(j) + rng()) / static_cast<Float>(this->film->height)) - 1.0_f };
-
-    Point3f origin{ this->look_from };
-    Vector3f direction{ this->horizontal * u + this->vertical * v + this->look_front * this->focal_length };
-
-    if (this->defocus_radius > 0.0_f) {
-        Vector3f random_direction{ this->defocus_radius * random_vector3f_in_unit_circle(rng) };
-        Vector3f offset{ this->look_right * random_direction.x + this->look_up * random_direction.y };
-        origin += offset;
-        direction -= offset;
-    }
-    return { origin, direction };
+    auto [u, v]{ this->get_offset_uv(i, j, rng) };
+    return this->generate_ray(u, v, rng);
 }
 
 std::shared_ptr<Camera> Camera::create(nlohmann::json const& config) {
@@ -68,6 +56,26 @@ std::shared_ptr<Camera> Camera::create(nlohmann::json const& config) {
         config.at("aspect_ratio"),
         config.at("defocus_angle")
     );
+}
+
+std::pair<Float, Float> Camera::get_offset_uv(uint32_t i, uint32_t j, RandomNumberGenerator& rng) const {
+    // Shoot ray to the center of the pixel.
+    Float u{ (2.0_f * (static_cast<Float>(i) + rng()) / static_cast<Float>(this->film->width)) - 1.0_f };
+    Float v{ (2.0_f * (static_cast<Float>(j) + rng()) / static_cast<Float>(this->film->height)) - 1.0_f };
+    return { u, v };
+}
+
+Ray Camera::generate_ray(Float u, Float v, RandomNumberGenerator& rng) const {
+    Point3f origin{ this->look_from };
+    Vector3f direction{ this->horizontal * u + this->vertical * v + this->look_front * this->focal_length };
+
+    if (this->defocus_radius > 0.0_f) {
+        Vector3f random_direction{ this->defocus_radius * random_vector3f_in_unit_circle(rng) };
+        Vector3f offset{ this->look_right * random_direction.x + this->look_up * random_direction.y };
+        origin += offset;
+        direction -= offset;
+    }
+    return { origin, direction, rng() };
 }
 
 RAY_TRACING_NAMESPACE_END

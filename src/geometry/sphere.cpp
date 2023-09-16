@@ -5,10 +5,16 @@ RAY_TRACING_NAMESPACE_BEGIN
 Sphere::Sphere(Point3f const& center, Float radius, std::shared_ptr<Material> const& mat_ptr)
     : center{ center }
     , radius{ radius }
-    , mat_ptr{ mat_ptr } {}
+    , mat_ptr{ mat_ptr } {
+    this->bounding_box = {
+        Point3f{ this->center - this->radius },
+        Point3f{ this->center + this->radius }
+    };
+}
 
 bool Sphere::hit(Ray const& ray, Interval ray_t, Interaction* interaction) const {
-    Vector3f oc{ ray.origin - this->center };
+    auto center_at_time{ this->get_center(ray.time_point) };
+    Vector3f oc{ ray.origin - center_at_time };
 
     // Convert to a quadratic equation.
     Float a{ glm::length2(ray.direction) };
@@ -33,9 +39,20 @@ bool Sphere::hit(Ray const& ray, Interval ray_t, Interaction* interaction) const
     // Record this interaction.
     interaction->t = t;
     interaction->hit_point = ray.at(t);
-    interaction->set_face_normal(ray, (interaction->hit_point - this->center) / this->radius);
+    interaction->set_face_normal(ray, (interaction->hit_point - center) / this->radius);
+    std::tie(interaction->u, interaction->v) = this->get_uv(interaction->normal);
     interaction->mat_ptr = this->mat_ptr;
     return true;
+}
+
+Point3f Sphere::get_center(Float) const {
+    return this->center;
+}
+
+std::pair<Float, Float> Sphere::get_uv(Vector3f const& p) const {
+    auto theta{ std::acos(-p.y) };
+    auto phi{ std::atan2(-p.z, p.x) + glm::pi<Float>() };
+    return { phi / (2.0_f * glm::pi<Float>()), theta / glm::pi<Float>() };
 }
 
 RAY_TRACING_NAMESPACE_END

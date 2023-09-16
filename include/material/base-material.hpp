@@ -12,6 +12,9 @@ struct Material {
     /// @return True if there is a scattered ray.
     virtual bool scatter(Ray const& ray, Interaction const& interaction, RandomNumberGenerator& rng, Color3f* attenuation, Ray* scattered) const = 0;
 
+    /// @brief Get the emitted color from light source.
+    virtual Color3f emitted(Interaction const& interaction) const;
+
     /// @brief Create a material object based on given configuration.
     static std::shared_ptr<Material> create(nlohmann::json const& config);
 };

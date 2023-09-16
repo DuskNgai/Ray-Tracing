@@ -19,6 +19,20 @@ public:
 public:
     /// @brief Get a random number in [0, 1).
     Float operator()();
+
+    std::mt19937_64& get_generator();
+};
+
+class IntegerRNG {
+private:
+    std::mt19937_64 generator;
+    std::uniform_int_distribution<std::size_t> distribution;
+
+public:
+    IntegerRNG(std::size_t min, std::size_t max);
+
+public:
+    std::size_t operator()();
 };
 
 RAY_TRACING_NAMESPACE_END

@@ -1,0 +1,106 @@
+{
+    "Camera": {
+        "look_from": [278.0, 278.0, -800.0],
+        "look_to": [278.0, 278.0, 0.0],
+        "ref_up": [0.0, 1.0, 0.0],
+        "y_field_of_view": 40.0,
+        "focal_length": 10.0,
+        "aspect_ratio": 1.0,
+        "defocus_angle": 0.0
+    },
+    "Scene": {
+        "Materials": {
+            "red": {
+                "type": "Lambertian",
+                "albedo": [0.65, 0.05, 0.05]
+            },
+            "white": {
+                "type": "Lambertian",
+                "albedo": [0.73, 0.73, 0.73]
+            },
+            "green": {
+                "type": "Lambertian",
+                "albedo": [0.12, 0.45, 0.15]
+            },
+            "light": {
+                "type": "DiffuseLight",
+                "emit": [7.0, 7.0, 7.0]
+            }
+        },
+        "Geometries": {
+            "left": {
+                "type": "Quad",
+                "base_point": [555.0, 0.0, 0.0],
+                "edge_a": [0.0, 555.0, 0.0],
+                "edge_b": [0.0, 0.0, 555.0],
+                "material": "green"
+            },
+            "right": {
+                "type": "Quad",
+                "base_point": [0.0, 0.0, 0.0],
+                "edge_a": [0.0, 555.0, 0.0],
+                "edge_b": [0.0, 0.0, 555.0],
+                "material": "red"
+            },
+            "light": {
+                "type": "Quad",
+                "base_point": [113.0, 554.0, 127.0],
+                "edge_a": [330.0, 0.0, 0.0],
+                "edge_b": [0.0, 0.0, 305.0],
+                "material": "light"
+            },
+            "floor": {
+                "type": "Quad",
+                "base_point": [0.0, 0.0, 0.0],
+                "edge_a": [555.0, 0.0, 0.0],
+                "edge_b": [0.0, 0.0, 555.0],
+                "material": "white"
+            },
+            "ceiling": {
+                "type": "Quad",
+                "base_point": [555.0, 555.0, 555.0],
+                "edge_a": [-555.0, 0.0, 0.0],
+                "edge_b": [0.0, 0.0, -555.0],
+                "material": "white"
+            },
+            "back": {
+                "type": "Quad",
+                "base_point": [0.0, 0.0, 555.0],
+                "edge_a": [555.0, 0.0, 0.0],
+                "edge_b": [0.0, 555.0, 0.0],
+                "material": "white"
+            },
+            "tallbox": {
+                "type": "ConstantMedium",
+                "boundary": {
+                    "type": "Box",
+                    "minimum": [0.0, 0.0, 0.0],
+                    "maximum": [165.0, 330.0, 165.0],
+                    "material": "white",
+                    "y rotation": 15.0,
+                    "translation": [265.0, 0.0, 295.0]
+                },
+                "phase function": [0.0, 0.0, 0.0],
+                "density": 0.01
+            },
+            "shortbox": {
+                "type": "ConstantMedium",
+                "boundary": {
+                    "type": "Box",
+                    "minimum": [0.0, 0.0, 0.0],
+                    "maximum": [165.0, 165.0, 165.0],
+                    "material": "white",
+                    "y rotation": -18.0,
+                    "translation": [130.0, 0.0, 65.0]
+                },
+                "phase function": [1.0, 1.0, 1.0],
+                "density": 0.01
+            }
+        }
+    },
+    "Enable gamma correction": true,
+    "Integrator": {
+        "enable background color": true,
+        "background color": [0.0, 0.0, 0.0]
+    }
+}

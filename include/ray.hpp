@@ -9,8 +9,9 @@ RAY_TRACING_NAMESPACE_BEGIN
 struct Ray {
     Point3f origin;
     Vector3f direction;
+    Float time_point;
 
-    Ray(Point3f const& origin = {}, Vector3f const& direction = {});
+    Ray(Point3f const& origin = {}, Vector3f const& direction = {}, Float time_point = 0.0_f);
 
     /// @brief Evaluate the ray at a given ray parameter.
     Point3f at(Float t) const;

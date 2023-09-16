@@ -14,6 +14,7 @@ private:
     std::vector<std::shared_ptr<Geometry>> objects;
 
 public:
+    explicit Scene(std::shared_ptr<Geometry> const& object);
     explicit Scene(std::vector<std::shared_ptr<Geometry>> const& objects);
     Scene(Scene const& other) = delete;
     Scene(Scene&& other) = default;

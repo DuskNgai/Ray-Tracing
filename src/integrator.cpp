@@ -10,9 +10,14 @@
 
 RAY_TRACING_NAMESPACE_BEGIN
 
-Integrator::Integrator(uint32_t spp, uint32_t ray_tracing_depth)
+Integrator::Integrator(uint32_t spp, uint32_t ray_tracing_depth, nlohmann::json const& config)
     : spp{ spp }
-    , ray_tracing_depth{ ray_tracing_depth } {}
+    , ray_tracing_depth{ ray_tracing_depth } {
+    this->enable_background_color = config.at("enable background color");
+    if (this->enable_background_color) {
+        this->background_color = from_json(config.at("background color"));
+    }
+}
 
 void Integrator::render(std::shared_ptr<Scene> const& scene, std::shared_ptr<Camera> const& camera) {
     std::atomic<uint32_t> scanline_finished{ 0 };
@@ -60,18 +65,25 @@ Color3f Integrator::radiance(std::shared_ptr<Scene> const& scene, Ray const& ray
     if (scene->hit(ray, { 1e-3_f, INF<Float> }, &interaction)) {
         Ray scattered;
         Color3f attenuation;
+        Color3f emitted{ interaction.mat_ptr->emitted(interaction) };
+
         if (interaction.mat_ptr->scatter(ray, interaction, rng, &attenuation, &scattered)) {
-            return attenuation * this->radiance(scene, scattered, rng, current_depth + 1);
+            return emitted + attenuation * this->radiance(scene, scattered, rng, current_depth + 1);
         }
         else {
-            return {};
+            return emitted;
         }
     }
 
-    auto unit_dir{ glm::normalize(ray.direction) };
-    auto t{ (unit_dir.y + 1.0_f) * 0.5_f };
-    // return glm::lerp(Color3f{ 1.0_f, 1.0_f, 1.0_f }, Color3f{ 0.5_f, 0.7_f, 1.0_f }, t);
-    return Color3f{ 1.0_f, 1.0_f, 1.0_f } - Color3f{ 0.5_f, 0.3_f, 0.0_f } * t;
+    if (this->enable_background_color) {
+        return this->background_color;
+    }
+    else {
+        auto unit_dir{ glm::normalize(ray.direction) };
+        auto t{ (unit_dir.y + 1.0_f) * 0.5_f };
+        // return glm::lerp(Color3f{ 1.0_f, 1.0_f, 1.0_f }, Color3f{ 0.5_f, 0.7_f, 1.0_f }, t);
+        return Color3f{ 1.0_f, 1.0_f, 1.0_f } - Color3f{ 0.5_f, 0.3_f, 0.0_f } * t;
+    }
 }
 
 RAY_TRACING_NAMESPACE_END

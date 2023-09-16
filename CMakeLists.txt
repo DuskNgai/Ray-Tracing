@@ -52,6 +52,7 @@ aux_source_directory(src SRC_FILES)
 aux_source_directory(src/accelerator SRC_FILES)
 aux_source_directory(src/geometry SRC_FILES)
 aux_source_directory(src/material SRC_FILES)
+aux_source_directory(src/texture SRC_FILES)
 aux_source_directory(src/utils SRC_FILES)
 
 add_executable(${PROJECT_NAME} ${SRC_FILES})

@@ -11,6 +11,7 @@ struct Interaction {
     Float t;
     Point3f hit_point;
     Vector3f normal;
+    Float u, v;
     bool is_outer_face;
     std::shared_ptr<Material> mat_ptr;
 
