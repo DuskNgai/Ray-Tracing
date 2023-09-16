@@ -7,6 +7,10 @@ Color3f Material::emitted([[maybe_unused]] Interaction const& interaction) const
     return {};
 }
 
+Float Material::bxdf([[maybe_unused]] Ray const& ray, [[maybe_unused]] Interaction const& interaction, [[maybe_unused]] Ray const& scattered) const {
+    return 0.0_f;
+}
+
 std::shared_ptr<Material> Material::create(nlohmann::json const& config) {
     std::string type{ config.at("type") };
 

@@ -46,6 +46,11 @@ Ray Camera::generate_ray(uint32_t i, uint32_t j, RandomNumberGenerator& rng) con
     return this->generate_ray(u, v, rng);
 }
 
+Ray Camera::generate_stratified_ray(uint32_t i, uint32_t j, uint32_t sx, uint32_t sy, Float inv_sqrt_spp, RandomNumberGenerator& rng) const {
+    auto [u, v]{ this->get_stratified_offset_uv(i, j, sx, sy, inv_sqrt_spp, rng) };
+    return this->generate_ray(u, v, rng);
+}
+
 std::shared_ptr<Camera> Camera::create(nlohmann::json const& config) {
     return std::make_shared<Camera>(
         from_json(config.at("look_from")),
@@ -62,6 +67,16 @@ std::pair<Float, Float> Camera::get_offset_uv(uint32_t i, uint32_t j, RandomNumb
     // Shoot ray to the center of the pixel.
     Float u{ (2.0_f * (static_cast<Float>(i) + rng()) / static_cast<Float>(this->film->width)) - 1.0_f };
     Float v{ (2.0_f * (static_cast<Float>(j) + rng()) / static_cast<Float>(this->film->height)) - 1.0_f };
+    return { u, v };
+}
+
+std::pair<Float, Float> Camera::get_stratified_offset_uv(uint32_t i, uint32_t j, uint32_t sx, uint32_t sy, Float inv_sqrt_spp, RandomNumberGenerator& rng) const {
+    // Shoot ray to the subpixel.
+    Float du{ (static_cast<Float>(sx) + rng()) * inv_sqrt_spp };
+    Float dv{ (static_cast<Float>(sy) + rng()) * inv_sqrt_spp };
+
+    Float u{ (2.0_f * (static_cast<Float>(i) + du) / static_cast<Float>(this->film->width)) - 1.0_f };
+    Float v{ (2.0_f * (static_cast<Float>(j) + dv) / static_cast<Float>(this->film->height)) - 1.0_f };
     return { u, v };
 }
 

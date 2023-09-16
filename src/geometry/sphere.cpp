@@ -45,6 +45,38 @@ bool Sphere::hit(Ray const& ray, Interval ray_t, Interaction* interaction) const
     return true;
 }
 
+Float Sphere::pdf(Point3f const& origin, Vector3f const& direction) const {
+    Interaction interaction;
+    if (not this->hit(Ray{ origin, direction }, Interval{ 1e-3_f, INF<Float> }, &interaction)) {
+        return 0.0_f;
+    }
+
+    auto cos_theta_max{ std::sqrt(1.0_f - this->radius * this->radius / glm::length2(origin - this->center)) };
+    auto solid_angle{ 2.0_f * glm::pi<Float>() * (1.0_f - cos_theta_max) };
+    return 1.0_f / solid_angle;
+}
+
+Vector3f Sphere::generate(Point3f const& origin, RandomNumberGenerator& rng) const {
+    Vector3f direction{ this->center - origin };
+    auto distance_squared{ glm::length2(direction) };
+
+    auto s{ rng() }, t{ rng() };
+    auto phi{ 2.0_f * glm::pi<Float>() * s };
+    auto z{ 1.0_f + t * (std::sqrt(1.0_f - this->radius * this->radius / distance_squared) - 1.0_f) };
+    auto x{ std::cos(phi) * std::sqrt(1.0_f - z * z) };
+    auto y{ std::sin(phi) * std::sqrt(1.0_f - z * z) };
+
+    Vector3f new_direction{ x, y, z };
+    Vector3f up{
+        std::abs(x) > 0.9_f ? Vector3f{0.0_f, 1.0_f, 0.0_f}
+                            : Vector3f{1.0_f, 0.0_f, 0.0_f}
+    };
+    Vector3f v{ glm::normalize(glm::cross(direction, up)) };
+    Vector3f u{ glm::cross(direction, v) };
+    Vector3f target_direction{ new_direction.x * u + new_direction.y * v + new_direction.z * direction };
+    return target_direction;
+}
+
 Point3f Sphere::get_center(Float) const {
     return this->center;
 }

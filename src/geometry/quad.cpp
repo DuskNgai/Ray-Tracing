@@ -9,6 +9,7 @@ Quad::Quad(Point3f const& base_point, Vector3f const& edge_a, Vector3f const& ed
     , mat_ptr{ mat_ptr } {
     auto unnormalized_normal = glm::cross(edge_a, edge_b);
     this->normal = glm::normalize(unnormalized_normal);
+    this->area = glm::length(unnormalized_normal);
     this->D = glm::dot(this->normal, base_point);
     this->w = unnormalized_normal / glm::length2(unnormalized_normal);
 
@@ -49,6 +50,24 @@ bool Quad::hit(Ray const& ray, Interval ray_t, Interaction* interaction) const {
     interaction->set_face_normal(ray, this->normal);
     interaction->mat_ptr = this->mat_ptr;
     return true;
+}
+
+Float Quad::pdf(Point3f const& origin, Vector3f const& direction) const {
+    Interaction interaction;
+    if (this->hit({ origin, direction }, { 1e-3_f, INF<Float> }, &interaction)) {
+        auto direction_squared{ glm::length2(direction) };
+        auto distance_squared{ interaction.t * interaction.t * direction_squared };
+        auto cosine{ std::abs(glm::dot(direction, this->normal)) / std::sqrt(direction_squared) };
+        return distance_squared / (cosine * this->area);
+    }
+    else {
+        return 0.0_f;
+    }
+}
+
+Vector3f Quad::generate(Point3f const& origin, RandomNumberGenerator& rng) const {
+    auto random_point{ this->base_point + rng() * this->edge_a + rng() * this->edge_b };
+    return random_point - origin;
 }
 
 RAY_TRACING_NAMESPACE_END

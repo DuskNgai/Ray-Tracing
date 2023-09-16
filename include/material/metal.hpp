@@ -14,7 +14,7 @@ public:
     Metal(Color3f const& albedo, Float fuzz);
 
 public:
-    virtual bool scatter(Ray const& ray, Interaction const& interaction, RandomNumberGenerator& rng, Color3f* attenuation, Ray* scattered) const override;
+    virtual bool scatter(Ray const& ray, Interaction const& interaction, RandomNumberGenerator& rng, MaterialRecord* record) const override;
 };
 
 RAY_TRACING_NAMESPACE_END

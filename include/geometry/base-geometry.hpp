@@ -19,6 +19,12 @@ public:
     /// @brief Get the bounding box of the geometry.
     virtual AABB const& get_bounding_box() const;
 
+    /// @brief The pdf value of the surface area of the geometry.
+    virtual Float pdf(Point3f const& origin, Vector3f const& direction) const;
+
+    /// @brief Generate a sample on the light surface.
+    virtual Vector3f generate(Point3f const& origin, RandomNumberGenerator& rng) const;
+
     /// @brief Create geometry objects based on given configuration.
     static std::vector<std::shared_ptr<Geometry>> create(nlohmann::json const& config, std::unordered_map<std::string, std::shared_ptr<Material>> const& materials);
 

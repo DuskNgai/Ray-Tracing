@@ -8,11 +8,14 @@ DiffuseLight::DiffuseLight(Color3f const& emit)
 DiffuseLight::DiffuseLight(std::shared_ptr<Texture> const& emit)
     : emit{ emit } {}
 
-bool DiffuseLight::scatter([[maybe_unused]] Ray const& ray, [[maybe_unused]] Interaction const& interaction, [[maybe_unused]] RandomNumberGenerator& rng, [[maybe_unused]] Color3f* attenuation, [[maybe_unused]] Ray* scattered) const {
+bool DiffuseLight::scatter([[maybe_unused]] Ray const& ray, [[maybe_unused]] Interaction const& interaction, [[maybe_unused]] RandomNumberGenerator& rng, [[maybe_unused]] MaterialRecord* record) const {
     return false;
 }
 
 Color3f DiffuseLight::emitted(Interaction const& interaction) const {
+    if (not interaction.is_outer_face) {
+        return {};
+    }
     return this->emit->sample(interaction.u, interaction.v, interaction.hit_point);
 }
 

@@ -1,4 +1,5 @@
 #include <material/lambertian.hpp>
+#include <pdf/cosine-pdf.hpp>
 
 RAY_TRACING_NAMESPACE_BEGIN
 
@@ -8,17 +9,16 @@ Lambertian::Lambertian(Color3f const& albedo)
 Lambertian::Lambertian(std::shared_ptr<Texture> albedo)
     : albedo{ albedo } {}
 
-bool Lambertian::scatter(Ray const& ray, Interaction const& interaction, RandomNumberGenerator& rng, Color3f* attenuation, Ray* scattered) const {
-    auto target_direction{ interaction.normal + glm::normalize(random_vector3f_in_unit_sphere(rng)) };
-
-    // Catch degenerate scatter direction.
-    if (glm::epsilonEqual(glm::length(target_direction), 0.0_f, EPSILON<Float>)) {
-        target_direction = interaction.normal;
-    }
-
-    *attenuation = this->albedo->sample(interaction.u, interaction.v, interaction.hit_point);
-    *scattered = { interaction.hit_point, target_direction, ray.time_point };
+bool Lambertian::scatter([[maybe_unused]] Ray const& ray, Interaction const& interaction, RandomNumberGenerator& rng, MaterialRecord* record) const {
+    record->attenuation = this->albedo->sample(interaction.u, interaction.v, interaction.hit_point);
+    record->pdf_ptr = std::make_shared<CosinePDF>(interaction.normal);
+    record->is_specular = false;
     return true;
+}
+
+Float Lambertian::bxdf([[maybe_unused]] Ray const& ray, Interaction const& interaction, [[maybe_unused]] Ray const& scattered) const {
+    auto cosine{ glm::dot(interaction.normal, glm::normalize(scattered.direction)) };
+    return cosine < 0.0_f ? 0.0_f : cosine / glm::pi<Float>();
 }
 
 RAY_TRACING_NAMESPACE_END

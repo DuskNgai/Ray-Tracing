@@ -15,6 +15,10 @@ struct Sphere : public Geometry {
 
     virtual bool hit(Ray const& ray, Interval ray_t, Interaction* interaction) const override;
 
+    virtual Float pdf(Point3f const& origin, Vector3f const& direction) const override;
+
+    virtual Vector3f generate(Point3f const& origin, RandomNumberGenerator& rng) const override;
+
     virtual Point3f get_center(Float time_point) const;
 
     std::pair<Float, Float> get_uv(Vector3f const& p) const;

@@ -1,6 +1,7 @@
 #ifndef _RAY_TRACING_GEOMETRY_SCENE_HPP_
 #define _RAY_TRACING_GEOMETRY_SCENE_HPP_
 
+#include <string_view>
 #include <vector>
 
 #include <geometry/base-geometry.hpp>
@@ -28,8 +29,12 @@ public:
 
     virtual bool hit(Ray const& ray, Interval ray_t, Interaction* interaction) const override;
 
+    virtual Float pdf(Point3f const& origin, Vector3f const& direction) const override;
+
+    virtual Vector3f generate(Point3f const& origin, RandomNumberGenerator& rng) const override;
+
     /// @brief Create a scene object based on given configuration.
-    static std::shared_ptr<Scene> create(nlohmann::json const& config);
+    static std::shared_ptr<Scene> create(nlohmann::json const& config, std::string_view name);
 };
 
 RAY_TRACING_NAMESPACE_END

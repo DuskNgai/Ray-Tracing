@@ -14,7 +14,9 @@ public:
     explicit Isotropic(std::shared_ptr<Texture> const& albedo);
     explicit Isotropic(Color3f const& albedo);
 
-    virtual bool scatter(Ray const& ray, Interaction const& interaction, RandomNumberGenerator& rng, Color3f* attenuation, Ray* scattered) const;
+    virtual bool scatter(Ray const& ray, Interaction const& interaction, RandomNumberGenerator& rng, MaterialRecord* record) const;
+
+    virtual Float bxdf(Ray const& ray, Interaction const& interaction, Ray const& scattered) const;
 };
 
 RAY_TRACING_NAMESPACE_END

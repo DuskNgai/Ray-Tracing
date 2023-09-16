@@ -16,7 +16,7 @@ public:
     explicit DiffuseLight(std::shared_ptr<Texture> const& emit);
 
 public:
-    virtual bool scatter(Ray const& ray, Interaction const& interaction, RandomNumberGenerator& rng, Color3f* attenuation, Ray* scattered) const override;
+    virtual bool scatter(Ray const& ray, Interaction const& interaction, RandomNumberGenerator& rng, MaterialRecord* record) const override;
 
     virtual Color3f emitted(Interaction const& interaction) const override;
 };

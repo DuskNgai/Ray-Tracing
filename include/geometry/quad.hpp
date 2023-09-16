@@ -11,6 +11,7 @@ private:
     Point3f base_point;
     Vector3f edge_a, edge_b;
     Vector3f normal;
+    Float area;
     Float D;    // Plane equation: Ax + By + Cz + D = 0.
     Vector3f w; // unnormalized_normal / glm::length2(unnormalized_normal)
     std::shared_ptr<Material> mat_ptr;
@@ -20,6 +21,10 @@ public:
 
 public:
     virtual bool hit(Ray const& ray, Interval ray_t, Interaction* interaction) const override;
+
+    virtual Float pdf(Point3f const& origin, Vector3f const& direction) const override;
+
+    virtual Vector3f generate(Point3f const& origin, RandomNumberGenerator& rng) const override;
 };
 
 RAY_TRACING_NAMESPACE_END

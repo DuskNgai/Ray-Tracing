@@ -16,7 +16,9 @@ public:
     explicit Lambertian(std::shared_ptr<Texture> albedo);
 
 public:
-    virtual bool scatter(Ray const& ray, Interaction const& interaction, RandomNumberGenerator& rng, Color3f* attenuation, Ray* scattered) const override;
+    virtual bool scatter(Ray const& ray, Interaction const& interaction, RandomNumberGenerator& rng, MaterialRecord* record) const override;
+
+    virtual Float bxdf(Ray const& ray, Interaction const& interaction, Ray const& scattered) const override;
 };
 
 RAY_TRACING_NAMESPACE_END

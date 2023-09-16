@@ -27,13 +27,16 @@ int main(int argc, char** argv) {
     camera->set_film(std::make_unique<Film>(args.image_width, args.image_height, config.at("Enable gamma correction")));
 
     // Create the scene.
-    auto scene{ Scene::create(config.at("Scene")) };
+    auto scene{ Scene::create(config.at("Scene"), "Scene") };
+
+    // Create the light.
+    auto lights{ Scene::create(config.at("Light"), "Light") };
 
     // Render the image.
     Timer timer;
     timer.start();
     Integrator integrator{ args.spp, args.ray_tracing_depth, config.at("Integrator") };
-    integrator.render(scene, camera);
+    integrator.render(scene, lights, camera);
     fmt::print("\nRendering Done!\n");
     timer.stop();
     fmt::print("Elapsed time: {:d} ms.\n", timer.get_elapsed_time());

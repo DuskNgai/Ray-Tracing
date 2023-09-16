@@ -42,7 +42,24 @@ bool Scene::hit(Ray const& ray, Interval ray_t, Interaction* interaction) const 
     return hit_anything;
 }
 
-std::shared_ptr<Scene> Scene::create(nlohmann::json const& config) {
+Float Scene::pdf(Point3f const& origin, Vector3f const& direction) const {
+    Float weight{ 1.0_f / this->objects.size() };
+    Float sum{ 0.0_f };
+    for (auto const& object : this->objects) {
+        sum += weight * object->pdf(origin, direction);
+    }
+    return sum;
+}
+
+Vector3f Scene::generate(Point3f const& origin, RandomNumberGenerator& rng) const {
+    auto index{ static_cast<std::size_t>(rng() * this->objects.size()) };
+    if (index == this->objects.size()) {
+        index = this->objects.size() - 1;
+    }
+    return this->objects[index]->generate(origin, rng);
+}
+
+std::shared_ptr<Scene> Scene::create(nlohmann::json const& config, std::string_view name) {
     // Store materials.
     std::unordered_map<std::string, std::shared_ptr<Material>> materials;
     for (auto const& [name, material] : config.at("Materials").items()) {
@@ -56,8 +73,13 @@ std::shared_ptr<Scene> Scene::create(nlohmann::json const& config) {
         objects.insert(objects.end(), new_objects.begin(), new_objects.end());
     }
 
-    auto bvh{ std::make_shared<BVH>(objects) };
-    return std::make_shared<Scene>(bvh);
+    if (name == "Scene") {
+        auto bvh{ std::make_shared<BVH>(objects) };
+        return std::make_shared<Scene>(bvh);
+    }
+    else {
+        return std::make_shared<Scene>(objects);
+    }
 }
 
 RAY_TRACING_NAMESPACE_END

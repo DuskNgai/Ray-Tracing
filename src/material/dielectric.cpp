@@ -5,7 +5,7 @@ RAY_TRACING_NAMESPACE_BEGIN
 Dielectric::Dielectric(Float rior)
     : rior{ rior } {}
 
-bool Dielectric::scatter(Ray const& ray, Interaction const& interaction, RandomNumberGenerator& rng, Color3f* attenuation, Ray* scattered) const {
+bool Dielectric::scatter(Ray const& ray, Interaction const& interaction, RandomNumberGenerator& rng, MaterialRecord* record) const {
     auto unit_dir{ glm::normalize(ray.direction) };
     auto rior_actual{ interaction.is_outer_face ? 1.0_f / this->rior : this->rior };
     auto refracted{ refract(unit_dir, interaction.normal, rior_actual) };
@@ -27,8 +27,10 @@ bool Dielectric::scatter(Ray const& ray, Interaction const& interaction, RandomN
         target_direction = refracted.value();
     }
 
-    *attenuation = { 1.0_f, 1.0_f, 1.0_f };
-    *scattered = { interaction.hit_point, target_direction, ray.time_point };
+    record->attenuation = { 1.0_f, 1.0_f, 1.0_f };
+    record->pdf_ptr = nullptr;
+    record->specular_ray = { interaction.hit_point, target_direction, ray.time_point };
+    record->is_specular = true;
     return true;
 }
 

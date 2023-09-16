@@ -59,12 +59,18 @@ public:
     /// @brief Generate a ray from the camera.
     Ray generate_ray(uint32_t i, uint32_t j, RandomNumberGenerator& rng) const;
 
+    /// @brief Generate a stratified ray from the camera.
+    Ray generate_stratified_ray(uint32_t i, uint32_t j, uint32_t sx, uint32_t sy, Float inv_sqrt_spp, RandomNumberGenerator& rng) const;
+
     /// @brief Create a camera based on given configuration.
     static std::shared_ptr<Camera> create(nlohmann::json const& config);
 
 private:
     /// @brief Get the offset inside the pixel.
     std::pair<Float, Float> get_offset_uv(uint32_t i, uint32_t j, RandomNumberGenerator& rng) const;
+
+    /// @brief Get the offset inside the pixel with stratified sampling.
+    std::pair<Float, Float> get_stratified_offset_uv(uint32_t i, uint32_t j, uint32_t sx, uint32_t sy, Float inv_sqrt_spp, RandomNumberGenerator& rng) const;
 
     /// @brief Get the origin-offseted ray.
     Ray generate_ray(Float u, Float v, RandomNumberGenerator& rng) const;

@@ -11,6 +11,14 @@ AABB const& Geometry::get_bounding_box() const {
     return this->bounding_box;
 }
 
+Float Geometry::pdf([[maybe_unused]] Point3f const& origin, [[maybe_unused]] Vector3f const& direction) const {
+    return 0.0_f;
+}
+
+Vector3f Geometry::generate([[maybe_unused]] Point3f const& origin, [[maybe_unused]] RandomNumberGenerator& rng) const {
+    return { 1.0_f, 0.0_f, 0.0_f };
+}
+
 std::vector<std::shared_ptr<Geometry>> Geometry::create(nlohmann::json const& config, std::unordered_map<std::string, std::shared_ptr<Material>> const& materials) {
     std::string type{ config.at("type") };
 
